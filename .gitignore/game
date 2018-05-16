@@ -1,0 +1,145 @@
+
+from tkinter import*
+import random
+
+ingame=Tk()
+ingame.geometry("1080x960")
+
+
+# GLOBAL #
+x0=0
+y0=0
+col=12
+lig=4
+larg=1080
+long=960
+
+
+#CARTES#
+    #Nordic#
+odin=PhotoImage(file="Odin.gif")
+sol=PhotoImage(file="Sol.gif")
+thor=PhotoImage(file="Thor.gif")
+ymir=PhotoImage(file="Ymir.gif")
+ullr=PhotoImage(file="Ullr.gif")
+ratatoskr=PhotoImage(file="Ratatoskr.gif")
+loki=PhotoImage(file="Loki.gif")
+freya=PhotoImage(file="Freya.gif")
+fenrir=PhotoImage(file="Fenrir.gif")
+fafnir=PhotoImage(file="Fafnir.gif")
+    #Egyptian#
+anhur=PhotoImage(file="Anhur.gif")
+geb=PhotoImage(file="Geb.gif")
+khepri=PhotoImage(file="Khepri.gif")
+isis=PhotoImage(file="Isis.gif")
+bastet=PhotoImage(file="Bastet.gif")
+anubis=PhotoImage(file="Anubis.gif")
+serqet=PhotoImage(file="Serqet.gif")
+
+neith=PhotoImage(file="Neith.gif")
+ra=PhotoImage(file="Ra.gif")
+osiris=PhotoImage(file="Osiris.gif")
+    #Greek#
+artemis=PhotoImage(file="Artemis.gif")
+apollo=PhotoImage(file="Apollo.gif")
+ares=PhotoImage(file="Ares.gif")
+hades=PhotoImage(file="Hades.gif")
+zeus=PhotoImage(file="Zeus.gif")
+poseidon=PhotoImage(file="Poseidon.gif")
+cerberus=PhotoImage(file="Cerberus.gif")
+chronos=PhotoImage(file="Chronos.gif")
+athena=PhotoImage(file="Athena.gif")
+medusa=PhotoImage(file="Medusa.gif")
+
+
+#DECKS#
+Deck_nordic=[odin,sol,thor,ymir,ullr,ratatoskr,loki,freya,fenrir,fafnir]
+Deck_egyptian=[anhur,geb,khepri,isis,bastet,anubis,serqet,neith,ra,osiris]
+Deck_greek=[artemis,apollo,ares,hades,zeus,poseidon,cerberus,chronos,athena,medusa]
+attribut_carte=[odin,sol,thor,ymir,ullr,ratatoskr,loki,freya,fenrir,fafnir,anhur,geb,khepri,isis,bastet,anubis,serqet,neith,ra,osiris,artemis,apollo,ares,hades,zeus,poseidon,cerberus,chronos,athena,medusa]
+
+#GRILLE_LIST#
+nom=0
+babar=""
+grillej1=[[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom]]
+grillej2=[[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom],[nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom,nom]]
+
+# affichage #
+def affichage():
+    global nom,grillej1,variable_carte,babar
+    for i in range(0,4):
+        for j in range(0,11):
+            if grillej1[i][j]!=nom:
+                zone_jeu.create_image(j*180+90,i*240+120,image=grillej1[i][j])
+                
+def affichage2():
+    global nom,grillej2,variable_carte,babar
+    for i in range(0,4):
+        for j in range(0,11):
+            if grillej1[i][j]!=nom:
+                zone_jeu.create_image(j*180+90,i*240+120,image=grillej1[i][j])
+#GRILLE#
+def grille():
+    global x0,y0,col,lig,larg,long
+    for i in range(col+1):
+        zone_jeu.create_line(x0+larg/12*i,y0,x0+larg/12*i,y0+long)
+    for i in range(lig+1):
+        zone_jeu.create_line(x0,y0+long/4*i,x0+larg,y0+long/4*i)
+
+#DETECTION#
+
+def correspondance(x,y):
+    return x//90,y//240
+    
+ 
+def ecrire(event):
+    global x,y,col,lig,larg,long,i,j
+    zone_texte.delete("0.0",END)
+    i,j=correspondance(event.x,event.y)
+    if i in range(col+1) and j in range(lig+1):
+        zone_texte.insert(END,"Click dans la case"+str(i)+","+str(j))
+    else:
+        zone_texte.insert(END,"click en dehors de la grille")
+
+
+#ZONE DE JEU#
+zone_de_jeu=Frame(ingame,borderwidth=2,relief=GROOVE)
+zone_de_jeu.pack()
+zone_jeu=Canvas(zone_de_jeu,height=960,width=1080,bg="white")
+zone_jeu.pack()
+grille()
+
+#PIOCHE CARTES#
+def draw2():
+    global grillej1,nom,babar,variable_carte
+    test2=0
+    variable_carte=random.choice(attribut_carte)
+    for i in range(0,12):
+        if grillej1[3][i]==nom and test2==0:
+            grillej1[3][i]=variable_carte
+            test2=1     
+    print(grillej1)
+    affichage()
+
+# fin de tours #
+
+def fin_de_tourj1():
+    ingame2=Toplevel(ingame)
+    ingame2.geometry("1080x960")
+    affichage2()
+    
+# BOUTTON #
+fin_tour=Button(zone_de_jeu,text="Fin de tour",command=fin_de_tourj1)
+fin_tour.place(x=1000,y=900)
+pioche=Button(zone_de_jeu,text="Pioche",command=draw2)
+pioche.place(x=1010,y=850)
+zone_texte=Text(zone_de_jeu,height=3,width=30,bg="light grey")
+zone_texte.place(x=500,y=500)
+
+#BIND#
+zone_jeu.bind('<Button-1>',ecrire)
+zone_jeu.focus_set()
+
+
+affichage()
+ingame.mainloop()
